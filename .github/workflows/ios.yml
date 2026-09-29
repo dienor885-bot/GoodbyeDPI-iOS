@@ -40,10 +40,13 @@ jobs:
           plutil -p "$APPEX/Info.plist"
           /usr/libexec/PlistBuddy -c 'Print :NSExtension' "$APPEX/Info.plist"
           chmod +x "$APP/GoodbyeDPI" "$APPEX/GoodbyeDPITunnel" || true
+          printf 'APPL????' > "$APP/PkgInfo"
+          printf 'XPC!!!!!' > "$APPEX/PkgInfo"
+          rm -rf "$APP/_CodeSignature" "$APPEX/_CodeSignature"
           rm -rf Payload
           mkdir Payload
           ditto "$APP" Payload/GoodbyeDPI.app
-          zip -r GoodbyeDPI-unsigned.ipa Payload
+          ditto -c -k --sequesterRsrc --keepParent Payload GoodbyeDPI-unsigned.ipa
           ls -lh GoodbyeDPI-unsigned.ipa
           unzip -l GoodbyeDPI-unsigned.ipa | grep -E 'appex|Info.plist'
 
