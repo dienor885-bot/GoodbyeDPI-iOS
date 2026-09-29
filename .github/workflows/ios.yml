@@ -34,11 +34,11 @@ jobs:
         run: |
           APP=$(find build -name "GoodbyeDPI.app" -type d | head -1)
           test -n "$APP"
-          APPEX="$APP/PlugIns/GoodbyeDPITunnel.appex"
+          APPEX=$(find "$APP" -name "*.appex" -type d | head -1)
+          echo "APP=$APP APPEX=$APPEX"
           test -d "$APPEX"
-          /usr/libexec/PlistBuddy -c 'Print :NSExtension:NSExtensionPointIdentifier' "$APPEX/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APPEX/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Print :CFBundlePackageType' "$APPEX/Info.plist"
+          plutil -p "$APPEX/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :NSExtension' "$APPEX/Info.plist"
           chmod +x "$APP/GoodbyeDPI" "$APPEX/GoodbyeDPITunnel" || true
           rm -rf Payload
           mkdir Payload
