@@ -1,0 +1,23 @@
+name: Release mobileconfig
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "dist/GoodbyeDPI-DoH.mobileconfig"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package mobileconfig
+        run: |
+          cp dist/GoodbyeDPI-DoH.mobileconfig GoodbyeDPI-DoH.mobileconfig
+          ls -lh GoodbyeDPI-DoH.mobileconfig
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GoodbyeDPI-DoH
+          path: GoodbyeDPI-DoH.mobileconfig
