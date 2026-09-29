@@ -2,6 +2,7 @@ import NetworkExtension
 import Network
 import Foundation
 
+@objc(PacketTunnelProvider)
 final class PacketTunnelProvider: NEPacketTunnelProvider {
     private var config = DPIConfig.default.applyingMode
     private var doh: DoHClient!

@@ -62,8 +62,8 @@ public struct DPIConfig: Codable, Equatable {
     }
 
     public static func load() -> DPIConfig {
-        guard let defaults = UserDefaults(suiteName: appGroup),
-              let data = defaults.data(forKey: key),
+        guard let defaults = UserDefaults(suiteName: Self.appGroup),
+              let data = defaults.data(forKey: Self.key),
               let cfg = try? JSONDecoder().decode(DPIConfig.self, from: data) else {
             return .default
         }
@@ -71,7 +71,7 @@ public struct DPIConfig: Codable, Equatable {
     }
 
     public func save() {
-        guard let defaults = UserDefaults(suiteName: appGroup) else { return }
+        guard let defaults = UserDefaults(suiteName: Self.appGroup) else { return }
         if let data = try? JSONEncoder().encode(self) {
             defaults.set(data, forKey: Self.key)
         }

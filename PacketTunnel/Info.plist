@@ -19,7 +19,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.networkextension.packet-tunnel</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>$(PRODUCT_MODULE_NAME).PacketTunnelProvider</string>
+		<string>PacketTunnelProvider</string>
 	</dict>
 	<key>NetworkExtension</key>
 	<dict>
@@ -28,7 +28,7 @@
 		<key>NEProviderClasses</key>
 		<dict>
 			<key>com.apple.networkextension.packet-tunnel</key>
-			<string>$(PRODUCT_MODULE_NAME).PacketTunnelProvider</string>
+			<string>PacketTunnelProvider</string>
 		</dict>
 	</dict>
 </dict>
