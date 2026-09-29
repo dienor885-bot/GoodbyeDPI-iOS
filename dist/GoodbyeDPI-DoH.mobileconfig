@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>DNSSettings</key>
+			<dict>
+				<key>DNSProtocol</key>
+				<string>HTTPS</string>
+				<key>ServerURL</key>
+				<string>https://1.1.1.1/dns-query</string>
+				<key>ServerAddresses</key>
+				<array>
+					<string>1.1.1.1</string>
+					<string>1.0.0.1</string>
+					<string>2606:4700:4700::1111</string>
+					<string>2606:4700:4700::1001</string>
+				</array>
+			</dict>
+			<key>PayloadDescription</key>
+			<string>Sends all DNS queries over HTTPS to Cloudflare so ISP cannot poison or intercept DNS (bypasses Discord/YouTube/Instagram blocks that rely on DNS). Does not affect connection speed.</string>
+			<key>PayloadDisplayName</key>
+			<string>GoodbyeDPI — DNS over HTTPS</string>
+			<key>PayloadIdentifier</key>
+			<string>com.goodbye.dpi.doh.dns</string>
+			<key>PayloadType</key>
+			<string>com.apple.dnsSettings.managed</string>
+			<key>PayloadUUID</key>
+			<string>A1B2C3D4-E5F6-7890-ABCD-EF1234567890</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>ProhibitDisablement</key>
+			<false/>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Routes DNS through Cloudflare DoH so ISP DNS poisoning cannot block Discord, YouTube, Instagram, Twitter or other sites. No VPN, no speed loss.</string>
+	<key>PayloadDisplayName</key>
+	<string>GoodbyeDPI — DNS over HTTPS</string>
+	<key>PayloadIdentifier</key>
+	<string>com.goodbye.dpi.doh</string>
+	<key>PayloadOrganization</key>
+	<string>GoodbyeDPI</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>B2C3D4E5-F6A7-8901-BCDE-F12345678901</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
