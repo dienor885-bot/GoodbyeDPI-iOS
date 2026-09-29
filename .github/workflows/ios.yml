@@ -34,11 +34,18 @@ jobs:
         run: |
           APP=$(find build -name "GoodbyeDPI.app" -type d | head -1)
           test -n "$APP"
+          APPEX="$APP/PlugIns/GoodbyeDPITunnel.appex"
+          test -d "$APPEX"
+          /usr/libexec/PlistBuddy -c 'Print :NSExtension:NSExtensionPointIdentifier' "$APPEX/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APPEX/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundlePackageType' "$APPEX/Info.plist"
+          chmod +x "$APP/GoodbyeDPI" "$APPEX/GoodbyeDPITunnel" || true
           rm -rf Payload
           mkdir Payload
-          cp -R "$APP" Payload/
+          ditto "$APP" Payload/GoodbyeDPI.app
           zip -r GoodbyeDPI-unsigned.ipa Payload
           ls -lh GoodbyeDPI-unsigned.ipa
+          unzip -l GoodbyeDPI-unsigned.ipa | grep -E 'appex|Info.plist'
 
       - uses: actions/upload-artifact@v4
         with:

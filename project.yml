@@ -43,11 +43,14 @@ targets:
       path: PacketTunnel/GoodbyeDPITunnel.entitlements
     settings:
       base:
+        PRODUCT_NAME: GoodbyeDPITunnel
         PRODUCT_BUNDLE_IDENTIFIER: com.goodbye.dpi.tunnel
         INFOPLIST_FILE: PacketTunnel/Info.plist
         CODE_SIGN_ENTITLEMENTS: PacketTunnel/GoodbyeDPITunnel.entitlements
         GENERATE_INFOPLIST_FILE: false
         SKIP_INSTALL: true
+        APPLICATION_EXTENSION_API_ONLY: YES
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks"
 schemes:
   GoodbyeDPI:
     build:
