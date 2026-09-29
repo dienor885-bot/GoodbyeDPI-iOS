@@ -1,0 +1,57 @@
+name: GoodbyeDPI
+options:
+  bundleIdPrefix: com.goodbye
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    DEVELOPMENT_TEAM: ""
+targets:
+  GoodbyeDPI:
+    type: application
+    platform: iOS
+    sources:
+      - App
+      - Shared
+    info:
+      path: App/Info.plist
+    entitlements:
+      path: GoodbyeDPI.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.goodbye.dpi
+        INFOPLIST_FILE: App/Info.plist
+        CODE_SIGN_ENTITLEMENTS: GoodbyeDPI.entitlements
+        GENERATE_INFOPLIST_FILE: false
+    dependencies:
+      - target: GoodbyeDPITunnel
+        embed: true
+  GoodbyeDPITunnel:
+    type: app-extension
+    platform: iOS
+    sources:
+      - PacketTunnel
+      - Shared
+    info:
+      path: PacketTunnel/Info.plist
+    entitlements:
+      path: PacketTunnel/GoodbyeDPITunnel.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.goodbye.dpi.tunnel
+        INFOPLIST_FILE: PacketTunnel/Info.plist
+        CODE_SIGN_ENTITLEMENTS: PacketTunnel/GoodbyeDPITunnel.entitlements
+        GENERATE_INFOPLIST_FILE: false
+        SKIP_INSTALL: true
+schemes:
+  GoodbyeDPI:
+    build:
+      targets:
+        GoodbyeDPI: all
+        GoodbyeDPITunnel: all
+    run:
+      config: Debug
+      askForAppToLaunch: true

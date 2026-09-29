@@ -1,0 +1,47 @@
+name: Build IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["**"]
+
+jobs:
+  ipa:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build unsigned (no Apple team required)
+        run: |
+          xcodebuild \
+            -project GoodbyeDPI.xcodeproj \
+            -scheme GoodbyeDPI \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Pack IPA
+        run: |
+          APP=$(find build -name "GoodbyeDPI.app" -type d | head -1)
+          test -n "$APP"
+          rm -rf Payload
+          mkdir Payload
+          cp -R "$APP" Payload/
+          zip -r GoodbyeDPI-unsigned.ipa Payload
+          ls -lh GoodbyeDPI-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GoodbyeDPI-unsigned
+          path: GoodbyeDPI-unsigned.ipa
