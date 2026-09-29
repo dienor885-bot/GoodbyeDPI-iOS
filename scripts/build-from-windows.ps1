@@ -22,7 +22,7 @@ if (-not $gh) {
 
 if (-not $Repo) {
     $Repo = & $gh repo view --json nameWithOwner -q .nameWithOwner
-    if (-not $Repo) { $Repo = "whowould/GoodbyeDPI-iOS" }
+    if (-not $Repo) { $Repo = "dienor885-bot/GoodbyeDPI-iOS" }
 }
 
 Write-Host "Triggering IPA build on GitHub (macOS runner) for $Repo"
