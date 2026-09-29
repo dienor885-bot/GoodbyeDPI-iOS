@@ -43,17 +43,13 @@ jobs:
           rm -rf Payload
           mkdir Payload
           ditto "$APP" Payload/GoodbyeDPI.app
-          python3 scripts/repack-ipa.py GoodbyeDPI-unsigned-tmp.ipa GoodbyeDPI-unsigned.ipa || python3 -c "
-          import os, zipfile
-          out='GoodbyeDPI-unsigned.ipa'
-          if os.path.exists(out): os.remove(out)
-          with zipfile.ZipFile(out,'w',allowZip64=False) as z:
-              for root, dirs, files in os.walk('Payload'):
-                  for fn in files:
-                      path=os.path.join(root,fn)
-                      arc=path.replace(chr(92),'/')
-                      z.write(path, arc, zipfile.ZIP_STORED if fn=='PkgInfo' else zipfile.ZIP_DEFLATED)
-          print('packed', os.path.getsize(out))
+          zip -X -r GoodbyeDPI-unsigned.ipa Payload
+          python3 -c "
+          import zipfile
+          z=zipfile.ZipFile('GoodbyeDPI-unsigned.ipa')
+          for i in z.infolist():
+              if 'PkgInfo' in i.filename:
+                  print(i.filename, i.file_size, i.compress_size, i.compress_type, len(i.extra))
           "
           unzip -l GoodbyeDPI-unsigned.ipa | grep -E 'PkgInfo|appex|Info.plist'
 
