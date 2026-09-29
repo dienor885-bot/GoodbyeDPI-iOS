@@ -44,28 +44,47 @@ final class TunnelModel: ObservableObject {
         config.save()
     }
 
+    private func tunnelBundleId() -> String {
+        let app = Bundle.main.bundleIdentifier ?? "com.goodbye.dpi"
+        return app + ".tunnel"
+    }
+
     private func installAndStart() {
         config.save()
+        let pluginId = tunnelBundleId()
         NETunnelProviderManager.loadAllFromPreferences { [weak self] list, err in
+            if let err {
+                DispatchQueue.main.async { self?.errorText = err.localizedDescription }
+                return
+            }
             let m = list?.first ?? NETunnelProviderManager()
             let proto = NETunnelProviderProtocol()
-            proto.providerBundleIdentifier = "com.goodbye.dpi.tunnel"
+            proto.providerBundleIdentifier = pluginId
             proto.serverAddress = "GoodbyeDPI"
+            proto.excludeLocalNetworks = true
             m.protocolConfiguration = proto
             m.localizedDescription = "GoodbyeDPI"
             m.isEnabled = true
             m.saveToPreferences { error in
                 DispatchQueue.main.async {
                     if let error {
-                        self?.errorText = error.localizedDescription
+                        self?.errorText = error.localizedDescription + " (need paid Apple Developer or TrollStore for VPN)"
                         return
                     }
-                    m.loadFromPreferences { _ in
-                        do {
-                            try m.connection.startVPNTunnel()
-                            self?.mgr = m
-                        } catch {
-                            self?.errorText = error.localizedDescription
+                    m.loadFromPreferences { loadErr in
+                        if let loadErr {
+                            self?.errorText = loadErr.localizedDescription
+                            return
+                        }
+                        m.isEnabled = true
+                        m.saveToPreferences { _ in
+                            do {
+                                try m.connection.startVPNTunnel()
+                                self?.mgr = m
+                                self?.errorText = ""
+                            } catch {
+                                self?.errorText = error.localizedDescription
+                            }
                         }
                     }
                 }
