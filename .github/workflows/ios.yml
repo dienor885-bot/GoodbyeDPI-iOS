@@ -35,10 +35,7 @@ jobs:
           APP=$(find build -name "GoodbyeDPI.app" -type d | head -1)
           test -n "$APP"
           APPEX=$(find "$APP" -name "*.appex" -type d | head -1)
-          echo "APP=$APP APPEX=$APPEX"
           test -d "$APPEX"
-          plutil -p "$APPEX/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Print :NSExtension' "$APPEX/Info.plist"
           chmod +x "$APP/GoodbyeDPI" "$APPEX/GoodbyeDPITunnel" || true
           printf 'APPL????' > "$APP/PkgInfo"
           printf 'XPC!!!!!' > "$APPEX/PkgInfo"
@@ -46,9 +43,19 @@ jobs:
           rm -rf Payload
           mkdir Payload
           ditto "$APP" Payload/GoodbyeDPI.app
-          ditto -c -k --sequesterRsrc --keepParent Payload GoodbyeDPI-unsigned.ipa
-          ls -lh GoodbyeDPI-unsigned.ipa
-          unzip -l GoodbyeDPI-unsigned.ipa | grep -E 'appex|Info.plist'
+          python3 scripts/repack-ipa.py GoodbyeDPI-unsigned-tmp.ipa GoodbyeDPI-unsigned.ipa || python3 -c "
+          import os, zipfile
+          out='GoodbyeDPI-unsigned.ipa'
+          if os.path.exists(out): os.remove(out)
+          with zipfile.ZipFile(out,'w',allowZip64=False) as z:
+              for root, dirs, files in os.walk('Payload'):
+                  for fn in files:
+                      path=os.path.join(root,fn)
+                      arc=path.replace(chr(92),'/')
+                      z.write(path, arc, zipfile.ZIP_STORED if fn=='PkgInfo' else zipfile.ZIP_DEFLATED)
+          print('packed', os.path.getsize(out))
+          "
+          unzip -l GoodbyeDPI-unsigned.ipa | grep -E 'PkgInfo|appex|Info.plist'
 
       - uses: actions/upload-artifact@v4
         with:
